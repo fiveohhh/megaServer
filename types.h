@@ -8,7 +8,9 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 enum msgTypes_E{
-	e_TMP,
+	e_TMP, // Temp update
+	e_ERS, // EEProm Reset
+	e_EGT, // EEProm Get
 	e_UNKNOWN
 
 };
