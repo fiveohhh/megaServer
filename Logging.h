@@ -19,8 +19,9 @@ void ResetEEProm();
 void LogTemp(uint8_t sensor, uint16_t kelvInt);
 void PrintTime();
 void LogLine(int val);
-void LogLine(char* msg);
-void Log(char* msg);
+void LogLine(char * msg, int len);
+void Log(char * msg, int len);
+
 
 // seconds between temp Logs
 #define TEMP_LOGGING_INTERVAL 300

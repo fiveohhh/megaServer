@@ -9,10 +9,13 @@
 #define SERIALLCD_H_
 
 #include "WProgram.h" //Include arduino headers
-
+#include "Logging.h"
 
 
 
 void ClearLCD();
-void DisplayTemp(char * temp, int sensor);
+void SetTemp(char * temp, int sensor);
+void InitializeSerialLCD();
+void DrawScreen();
+
 #endif /* SERIALLCD_H_ */

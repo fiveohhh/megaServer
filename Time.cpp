@@ -5,6 +5,8 @@
  *      Author: Andy
  */
 
+
+
 #include "Time.h"
 
 void InitializeTime()
@@ -31,15 +33,13 @@ void InitializeTime()
 
 unsigned long GetEpoch()
 {
-	Serial.println("test point ge1");
+#ifdef ETHERNET_INSTALLED
+	Serial.print("Getting Epoch");
 	Udp.begin(localPort);
-	Serial.println("test point ge2");
 	  sendNTPpacket(timeServer); // send an NTP packet to a time server
-	  Serial.println("test point ge3");
 	    // wait to see if a reply is available
 	  delay(1000);
 	  if ( Udp.available() ) {
-		  Serial.println("test point 4");
 	    Udp.readPacket(packetBuffer,NTP_PACKET_SIZE);  // read the packet into the buffer
 
 	    //the timestamp starts at byte 40 of the received packet and is four bytes,
@@ -77,10 +77,11 @@ unsigned long GetEpoch()
 
 	    return epoch;
 	  }
-	  Serial.println("test point ge5");
+#endif
 	  return 0;
 }
 
+#ifdef ETHERNET_INSTALLED
 // send an NTP request to the time server at the given address
 unsigned long sendNTPpacket(byte *address)
 {
@@ -104,3 +105,4 @@ unsigned long sendNTPpacket(byte *address)
   Udp.sendPacket( packetBuffer,NTP_PACKET_SIZE,  address, 123); //NTP requests are to port 123
   return 0;
 }
+#endif

@@ -18,29 +18,30 @@ void ProcessMessages()
 
 	for (int i = 0; i < msgCount; i++)
 	{
-		LogLine("Processing...");
-		LogLine(messages[i]);
+		LogLine("Processing...", strlen("Processing..."));
+		LogLine(messages[i], strlen(messages[i]));
 		msgTypes_E t = GetMsgType(messages[i]);
 		switch(t)
 		{
 		// report a TEMP, TMPXYTTTTT X=Destination address, Y=Sensor #, TTTTT=(Temp in K)*100
 		case e_TMP:
-			LogLine("TMP message received: ");
+			Serial.println(strlen("TMP message received: "));
+			LogLine("TMP message received: ", strlen("TMP message received: "));
 			ProcessTMPMsg(messages[i]);
 			break;
 		// reset EEPROM logging back to starting address
 		case e_ERS:
-			LogLine("ERS message received: ");
+			LogLine("ERS message received: ", strlen("ERS message received: "));
 			ProcessERSMsg(messages[i]);
 			break;
 		// Get EEPROM
 		case e_EGT:
-			LogLine("EGT message received: ");
+			LogLine("EGT message received: ", strlen("EGT message received: "));
 			ProcessEGTMsg(messages[i]);
 			break;
 		case e_UNKNOWN:
-			LogLine("Unknown message received: ");
-			LogLine(messages[i]);
+			LogLine("UNKNOWN message received: ", strlen("UNKNOWN message received: "));
+			LogLine(messages[i], VW_MAX_MESSAGE_LEN);
 			break;
 		}
 		msgCount--;
@@ -95,9 +96,9 @@ void ProcessTMPMsg(char* msg)
 	kelvin[t] = '\0';
 	for (int k = 0; k < 5; k++)
 	{
-		LogLine(kelvin[k]);
+		//LogLine(kelvin[k]);
 	}
-	Serial.println("");
+	LogLine(kelvin, t);
 	int kelvInt = atoi(kelvin);
 
 	double Kelv = kelvInt/100;
@@ -110,16 +111,18 @@ void ProcessTMPMsg(char* msg)
 		//lcd.setCursor(0,0);
 		//sprintf(lcdMsg,"Outside: %dF",fAsInt);
 		//lcd.print(lcdMsg);
-		sprintf(lcdMsg,"%df", fAsInt);
-		DisplayTemp(lcdMsg,0);
+		sprintf(lcdMsg,"%dF", fAsInt);
+		Serial1.println(lcdMsg);
+		SetTemp(lcdMsg,0);
 	}
 	else if (msg[4] == 48)
 	{
 		//lcd.setCursor(0,1);
 		//sprintf(lcdMsg,"Garage: %dF",fAsInt);
 		//lcd.print(lcdMsg);
-		sprintf(lcdMsg,"%df", fAsInt);
-		DisplayTemp(lcdMsg,1);
+		sprintf(lcdMsg,"%dF", fAsInt);
+		Serial1.println(lcdMsg);
+		SetTemp(lcdMsg,1);
 	}
 
 	LogTemp(msg[4], kelvInt);
@@ -143,7 +146,7 @@ void ServiceVirtualWire()
 			 if (vw_get_message(buf, &buflen)) // Non-blocking
 			 {
 				 char str[VW_MAX_MESSAGE_LEN];
-				 LogLine("Msg Received From Virtual Wire...");
+				 LogLine("Msg Received From Virtual Wire...", strlen("Msg Received From Virtual Wire..."));
 				 for (int i = 0; i < buflen; i++)
 				 {
 					 str[i] = buf[i];
@@ -153,7 +156,7 @@ void ServiceVirtualWire()
 				 //messages[msgCount] = str;
 				 strcpy(messages[msgCount],str);
 				 msgCount++;
-				 LogLine(str);
+				 LogLine(str, buflen);
 			 }
 }
 
@@ -167,7 +170,7 @@ void ServiceSerial()
 		//Serial.println(Serial.read(), DEC);
 		if (index > MAX_MSG_LENGTH_SERIAL)
 		{
-			LogLine("Max Serial buffer reached... Flushing UART");
+			LogLine("Max Serial buffer reached... Flushing UART", strlen("Max Serial buffer reached... Flushing UART"));
 			Serial.flush();
 			index = 0;
 
@@ -178,7 +181,7 @@ void ServiceSerial()
 			if (buf[index] == 13)
 			{
 				char str[MAX_MSG_LENGTH_SERIAL];
-				LogLine("Msg Received From Serial...");
+				LogLine("Msg Received From Serial...", strlen("Msg Received From Serial..."));
 				for (int i = 0; i < index; i++)
 				 {
 					 str[i] = buf[i];
@@ -187,7 +190,7 @@ void ServiceSerial()
 				 str[index] = '\0';
 				 strcpy(messages[msgCount],str);
 				 msgCount++;
-				 LogLine(str);
+				 LogLine(str, index);
 				 index = 0;
 			}
 			else

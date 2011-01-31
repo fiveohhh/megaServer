@@ -1,7 +1,14 @@
+
+
+
 #include "WProgram.h" //Include arduino headers
 //#include "EEPROM/EEPROM.h"
+#ifdef ETHERNET_INSTALLED
 #include "Ethernet/Ethernet.h"
 #include "Ethernet/Udp.h"
+#include "Networking.h"
+#endif
+
 #include "SPI/SPI.h"
 #include "LCD/LiquidCrystal.h"
 #include "RTC1307/RTClib.h"
@@ -9,7 +16,7 @@
 #include "globals.h"
 #include "types.h"
 #include "Wire/Wire.h"
-#include "Networking.h"
+
 #include "Time.h"
 #include "MessageProcessing.h"
 #include "Logging.h"
@@ -32,15 +39,14 @@ RTC_DS1307 RTC;
 //LiquidCrystal lcd(32, 31, 25, 24, 23, 22);
 
 
+
 // how many messages we have that need processing
 int msgCount = 0;
 // array of the messages that need processing
 char messages[MAX_MESSAGES][VW_MAX_MESSAGE_LEN];
 
-
 ///MAIN///
-int main()
-{
+int main() {
 
 	//Initialize the Arduino library.
 	//Not doing so will prevent the delay function
@@ -53,15 +59,15 @@ int main()
 	Serial.begin(57600);
 	Serial.println("Starting...");
 
+	InitializeSerialLCD();
 	//Serial1.begin(115200);
-	//Serial1.print("Starting...");
+	Serial1.print("Starting...");
 
-	Serial.println("test point 1");
 	Wire.begin();
 
-	 // Initialize the IO and ISR
+	// Initialize the IO and ISR
 	vw_set_ptt_inverted(true); // Required for DR3100
-	vw_setup(2000);	 // Bits per sec
+	vw_setup(2000); // Bits per sec
 	vw_rx_start();
 
 	// set up the LCD's number of rows and columns:
@@ -70,16 +76,14 @@ int main()
 
 
 	RTC.begin();
-	Serial.println("test point 2");
-	InitializeTime();
-	Serial.println("test point 3");
+#ifdef ETHERNET_INSTALLED
 	InitializeNetwork();
-	Serial.println("test point 4");
+#endif
+	InitializeTime();
 	//Configure ledPin as an output
 	pinMode(ledPin, OUTPUT);
 
 	InitializeLogging();
-	Serial.println("test point 5");
 
 	InitializeTaskRunner();
 
@@ -88,15 +92,16 @@ int main()
 	//port on the PC so this message can be seen
 	//there
 	Serial.println("Ready.");
-	ClearLCD();
+
 	Serial1.print("Ready");
+	ClearLCD();
+	DrawScreen();
 
 	//Enter the infinite loop responsible for making
 	//the microcontroller do the same thing over and
 	//over again. (Almost every microcontroller has
 	//such a loop)
-	while(true)
-	{
+	while (true) {
 		RunScheduledTasks();
 	}
 
@@ -104,9 +109,4 @@ int main()
 	//the compiler
 	return 0;
 }
-
-
-
-
-
 

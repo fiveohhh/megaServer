@@ -49,23 +49,18 @@ void OneSecond()
 		// commenting this out since I don't want to clutter output
 		//Serial.println("Running OneSecond Tasks");
 		// run this at a minimum of every 1 seconds
-
-
 		ToggleLED();
-
-
 	}
-
 }
 
 void TenSeconds()
 {
+
 	static unsigned long lastRunTime = 0;
 	if (secondsRunning - lastRunTime >= 10)
 	{
 		lastRunTime = secondsRunning;
 		Serial.println("Running TenSecond Tasks");
-
 		// run this at a minimum of every ten seconds
 
 	}

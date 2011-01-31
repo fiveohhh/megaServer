@@ -22,19 +22,31 @@ void InitializeLogging()
 		uint8_t msb = EEPROM.read(ADDR_MSB);
 		currentEEAddress = msb << 4;
 		currentEEAddress = currentEEAddress | lsb;
-		LogLine("Starting Address: ");
+		char * startMsg = "Starting Address: ";
+		LogLine(startMsg, (int)strlen(startMsg));
 		LogLine(currentEEAddress);
 }
 
-void LogLine(char* msg)
+void LogLine(char * msg, int len)
 {
+	char * mg;
+
+	msg[len] = '\0';
+	//sprintf(mg,"%sh",msg,len);
 	Serial.println(msg);
 }
 
-void Log(char* msg)
+void Log(char* msg, int len)
 {
+	char * mg;
+
+	msg[len] = '\0';
+	sprintf(mg,"%sh",msg,len);
 	Serial.print(msg);
 }
+
+
+
 
 void LogLine(int val)
 {
@@ -45,7 +57,7 @@ void LogLine(int val)
 
 void LogTemp(uint8_t sensor, uint16_t kelvInt)
 {
-
+	Serial.println("testpt 6");
 	if (millis()/1000 - SecondsTempsLastLogged[sensor] > TEMP_LOGGING_INTERVAL)
 	{
 		PrintTime();

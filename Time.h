@@ -10,7 +10,11 @@
 
 #include "WProgram.h" //Include arduino headers
 #include "RTC1307/RTClib.h"
+
+#ifdef ETHERNET_INSTALLED
 #include "Ethernet/Udp.h"
+#endif
+
 #include "globals.h"
 
 //*********************CONSTANTS
