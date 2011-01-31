@@ -12,7 +12,6 @@
 #include "types.h"
 #include "VirtualWire/VirtualWire.h"
 #include "globals.h"
-#include "LCD/LiquidCrystal.h"
 #include "Logging.h"
 #include "SerialLCD.h"
 
@@ -25,7 +24,7 @@ void ServiceVirtualWire();
 void ServiceSerial();
 
 extern char messages[MAX_MESSAGES][VW_MAX_MESSAGE_LEN];
-extern LiquidCrystal lcd;
+
 extern int msgCount;
 
 #endif /* MESSAGEPROCESSING_H_ */

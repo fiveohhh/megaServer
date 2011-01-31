@@ -10,7 +10,7 @@
 #endif
 
 #include "SPI/SPI.h"
-#include "LCD/LiquidCrystal.h"
+
 #include "RTC1307/RTClib.h"
 #include "VirtualWire/VirtualWire.h"
 #include "globals.h"
