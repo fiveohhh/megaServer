@@ -12,6 +12,7 @@
 #define CHAR_HEIGHT 8
 #define CHAR_WIDTH 6
 #define LAST_UPDATED_LINE 7
+#define TIME_ZONE_ADJUST -6
 
 
 void SetBaudRate();
@@ -65,10 +66,19 @@ void DrawScreen()
 
 	}
 
+
+
+	// write last updated time
 	SetCursor(0, (TOP_PIXEL - (LAST_UPDATED_LINE*CHAR_HEIGHT)));
 	//Serial1.println(TOP_PIXEL - (LAST_UPDATED_LINE*CHAR_HEIGHT));
 	DateTime now = RTC.now();
-	Serial1.print(now.unixtime());
+
+	// 20 is max length dateTimestring should be xx/xx/xxxx xx:xx
+	char dateTimeStr[20];
+	uint8_t hour = now.hour();
+	hour = (hour > TIME_ZONE_ADJUST) ? (hour - TIME_ZONE_ADJUST) : (hour + 24 - TIME_ZONE_ADJUST);
+	sprintf(dateTimeStr, "%d/%d/%d %d:%02d", now.month(), now.day(), now.year(), hour, now.minute());
+	Serial1.print(dateTimeStr);
 }
 
 void SetCursor(uint8_t x, uint8_t y)

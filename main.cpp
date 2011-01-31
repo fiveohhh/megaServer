@@ -94,7 +94,7 @@ int main() {
 	Serial.println("Ready.");
 
 	Serial1.print("Ready");
-	ClearLCD();
+
 	DrawScreen();
 
 	//Enter the infinite loop responsible for making

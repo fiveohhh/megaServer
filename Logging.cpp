@@ -57,7 +57,6 @@ void LogLine(int val)
 
 void LogTemp(uint8_t sensor, uint16_t kelvInt)
 {
-	Serial.println("testpt 6");
 	if (millis()/1000 - SecondsTempsLastLogged[sensor] > TEMP_LOGGING_INTERVAL)
 	{
 		PrintTime();
