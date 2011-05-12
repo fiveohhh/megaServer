@@ -8,6 +8,7 @@
 #ifndef SERIALLCD_H_
 #define SERIALLCD_H_
 
+
 #include "WProgram.h" //Include arduino headers
 #include "Logging.h"
 
@@ -17,5 +18,6 @@ void ClearLCD();
 void SetTemp(char * temp, int sensor);
 void InitializeSerialLCD();
 void DrawScreen();
+void SetMessage(char * p_msg, int len);
 
 #endif /* SERIALLCD_H_ */

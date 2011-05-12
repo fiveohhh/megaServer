@@ -14,8 +14,8 @@
 byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte ip[] = {
-  192,168,1,177 };
-byte gateway[] = { 192,168,1, 1 };
+  10,12,34,99 };
+byte gateway[] = { 10,12,34, 1 };
 byte subnet[] = { 255, 255, 255, 0 };
 
 Server server(PORT);

@@ -35,6 +35,9 @@
 								<option id="de.innot.avreclipse.compiler.option.incpath.1861091940" name="Include Paths (-I)" superClass="de.innot.avreclipse.compiler.option.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Arduino}&quot;"/>
 								</option>
+								<option id="de.innot.avreclipse.compiler.option.def.774250922" name="Define Syms (-D)" superClass="de.innot.avreclipse.compiler.option.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ETHERNET_INSTALLED"/>
+								</option>
 								<inputType id="de.innot.avreclipse.compiler.winavr.input.385520671" name="C Source Files" superClass="de.innot.avreclipse.compiler.winavr.input"/>
 							</tool>
 							<tool id="de.innot.avreclipse.tool.cppcompiler.app.debug.608176442" name="AVR C++ Compiler" superClass="de.innot.avreclipse.tool.cppcompiler.app.debug">
@@ -44,7 +47,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Arduino}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs}&quot;"/>
 								</option>
-								<option id="de.innot.avreclipse.cppcompiler.option.optimize.other.263013536" superClass="de.innot.avreclipse.cppcompiler.option.optimize.other" value="-ffunction-sections -fdata-sections -Wl,--gc-sections" valueType="string"/>
+								<option id="de.innot.avreclipse.cppcompiler.option.optimize.other.263013536" name="Other Optimization Flags" superClass="de.innot.avreclipse.cppcompiler.option.optimize.other" value="-ffunction-sections -fdata-sections -Wl,--gc-sections" valueType="string"/>
+								<option id="de.innot.avreclipse.cppcompiler.option.def.1248501836" name="Define Syms (-D)" superClass="de.innot.avreclipse.cppcompiler.option.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ETHERNET_INSTALLED"/>
+								</option>
 								<inputType id="de.innot.avreclipse.cppcompiler.input.1724644371" superClass="de.innot.avreclipse.cppcompiler.input"/>
 							</tool>
 							<tool id="de.innot.avreclipse.tool.linker.winavr.app.debug.760069824" name="AVR C Linker" superClass="de.innot.avreclipse.tool.linker.winavr.app.debug"/>

@@ -13,7 +13,12 @@
 #define CHAR_WIDTH 6
 #define LAST_UPDATED_LINE 7
 #define TIME_ZONE_ADJUST -6
+#define NUM_OF_SENSORS_TO_DISPLAY 2
+#define LCD_WIDTH_IN_CHARS 22 // 21 wide plus one for null char
 
+static char tempSensors[][10] = {"Outside", "Garage"};
+static char temps[][7] = {"NULL", "NULL"};
+static char LCDMessage[LCD_WIDTH_IN_CHARS];
 
 void SetBaudRate();
 void SetCursor(uint8_t x, uint8_t y);
@@ -21,19 +26,31 @@ void EraseBlock(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2);
 void DrawLine(int x, int y);
 
 
-#define NUM_OF_SENSORS_TO_DISPLAY 2
-char tempSensors[][10] = {"Outside", "Garage"};
-char temps[][7] = {"NULL", "NULL"};
+
+
 void InitializeSerialLCD()
 {
 	Serial1.begin(115200);
 
+	sprintf(LCDMessage,"No Messages");
 
 	ClearLCD();
 	Serial1.print("Screen initialized");
 
 }
 
+void SetMessage(char * p_msg, int len)
+{
+	if (len < LCD_WIDTH_IN_CHARS)
+	{
+		int i = 0;
+		for (i = 0; i < len; i++)
+		{
+			LCDMessage[i] = p_msg[i];
+		}
+		LCDMessage[i] = '\0';
+	}
+}
 
 void ClearLCD()
 {
@@ -56,15 +73,23 @@ void SetTemp(char * temp, int sensor)
 void DrawScreen()
 {
 	ClearLCD();
+
 	for (int i = 0; i < NUM_OF_SENSORS_TO_DISPLAY; i++)
 	{
 
-		char  msg[MAX_TEMP_DISPLAY_LENGTH];
+		char  msg[MAX_TEMP_DISPLAY_LENGTH] = "null";
 		sprintf(msg, "%s: %s",tempSensors[i], temps[i]);
+		//msg[MAX_TEMP_DISPLAY_LENGTH - 1] = '\0';
+		//Serial.println(*msg);
 		SetCursor(0, TOP_PIXEL - (i*CHAR_HEIGHT));
 		Serial1.print(msg);
 
 	}
+
+	// display message on line below temps
+	LCDMessage[LCD_WIDTH_IN_CHARS - 1] = '\0';// make sure we are null terminated
+	SetCursor(0, TOP_PIXEL - (NUM_OF_SENSORS_TO_DISPLAY*CHAR_HEIGHT));
+	Serial1.print(LCDMessage);
 
 
 
@@ -76,7 +101,7 @@ void DrawScreen()
 	// 20 is max length dateTimestring should be xx/xx/xxxx xx:xx
 	char dateTimeStr[20];
 	uint8_t hour = now.hour();
-	hour = (hour > TIME_ZONE_ADJUST) ? (hour - TIME_ZONE_ADJUST) : (hour + 24 - TIME_ZONE_ADJUST);
+	hour = (hour > abs(TIME_ZONE_ADJUST)) ? (hour + TIME_ZONE_ADJUST) : (hour + 24 + TIME_ZONE_ADJUST);
 	sprintf(dateTimeStr, "%d/%d/%d %d:%02d", now.month(), now.day(), now.year(), hour, now.minute());
 	Serial1.print(dateTimeStr);
 }

@@ -8,10 +8,28 @@
 // temp is in Kelvin.  normalized to K*100
 #include "Logging.h"
 
+char FILENAME[] = "datalog.txt";
+
+const int chipSelect = 53;
+
 static unsigned long SecondsTempsLastLogged[NUMBER_OF_TEMP_SENSORS];
+
+void LogToSDCard(char * msg);
+void LogTempToSD(uint8_t sensor, uint16_t kelv);
+
 
 void InitializeLogging()
 {
+	Serial1.println("Initializing SD card...");
+	if (!SD.begin(chipSelect))
+	{
+	    Serial1.println("Card failed, or not present");
+	}
+	else
+	{
+	  Serial1.println("card initialized.");
+	}
+
 	for (int i = 0; i < NUMBER_OF_TEMP_SENSORS; i++)
 	{
 		SecondsTempsLastLogged[i] = 0;
@@ -50,15 +68,16 @@ void Log(char* msg, int len)
 
 void LogLine(int val)
 {
-	char * msg;
-	sprintf(msg,"%d",val);
-	Serial.println(msg);
+	Serial.println(val, DEC);
 }
 
 void LogTemp(uint8_t sensor, uint16_t kelvInt)
 {
+
 	if (millis()/1000 - SecondsTempsLastLogged[sensor] > TEMP_LOGGING_INTERVAL)
 	{
+
+		LogTempToSD(sensor,kelvInt);
 		PrintTime();
 		SecondsTempsLastLogged[sensor] = millis()/1000;
 		static int writes = 0;
@@ -86,6 +105,8 @@ void LogTemp(uint8_t sensor, uint16_t kelvInt)
 			 writes = 0;
 			 WriteStartAddress(currentEEAddress);
 		 }
+
+
 	}
 }
 
@@ -144,4 +165,41 @@ void PrintTime()
 	    Serial.print(':');
 	    Serial.print(now.second(), DEC);
 	    Serial.println();
+}
+
+void LogTempToSD(uint8_t sensor, uint16_t kelvInt)
+{
+	char buf[255] = "";
+	DateTime now = RTC.now();
+	sprintf(buf,"%d/%d/%d %d:%d:%d,%d,%d",now.year(),now.month(),now.day(),now.hour(),now.minute(),now.second(),sensor,kelvInt);
+	LogToSDCard(buf);
+
+
+}
+
+void LogToSDCard(char * msg)
+{
+
+	// open the file. note that only one file can be open at a time,
+	// so you have to close this one before opening another.
+	File dataFile = SD.open(FILENAME, FILE_WRITE);
+
+	// if the file is available, write to it:
+	if (dataFile)
+	{
+		Serial.print("Logging to SD->");
+		Serial.println(msg);
+		dataFile.println(msg);
+		dataFile.close();
+		// print to the serial port too:
+		//Serial.println(dataString);
+	}
+	  // if the file isn't open, pop up an error:
+	else
+	{
+
+		Serial.println("error opening datalog.txt");
+		SetMessage("SD ERROR", strlen("SD ERROR"));
+
+	}
 }

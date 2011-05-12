@@ -22,6 +22,7 @@
 #include "Logging.h"
 #include "tasks.h"
 #include "SerialLCD.h"
+//#include "SD/SD.h"
 
 #undef int
 #undef abs
@@ -37,7 +38,6 @@ const int interval = 1000; //Milliseconds
 RTC_DS1307 RTC;
 
 //LiquidCrystal lcd(32, 31, 25, 24, 23, 22);
-
 
 
 // how many messages we have that need processing
@@ -93,9 +93,11 @@ int main() {
 	//there
 	Serial.println("Ready.");
 
-	Serial1.print("Ready");
+	Serial1.print("Ready...");
+	Serial1.print("Awaiting First Message");
 
-	DrawScreen();
+
+
 
 	//Enter the infinite loop responsible for making
 	//the microcontroller do the same thing over and

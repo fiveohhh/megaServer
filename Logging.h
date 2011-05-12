@@ -11,6 +11,8 @@
 #include "EEPROM/EEPROM.h"
 #include "globals.h"
 #include "Time.h"
+#include "SD/SD.h"
+#include "SerialLCD.h"
 
 void InitializeLogging();
 void WriteStartAddress(uint16_t startingAddress);
