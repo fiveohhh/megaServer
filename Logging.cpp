@@ -47,7 +47,7 @@ void InitializeLogging()
 
 void LogLine(char * msg, int len)
 {
-	char * mg;
+
 
 	msg[len] = '\0';
 	//sprintf(mg,"%sh",msg,len);
@@ -56,7 +56,7 @@ void LogLine(char * msg, int len)
 
 void Log(char* msg, int len)
 {
-	char * mg;
+	char * mg = "";
 
 	msg[len] = '\0';
 	sprintf(mg,"%sh",msg,len);
