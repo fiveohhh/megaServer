@@ -37,6 +37,7 @@ void FastAsPossible()
 	// Run this every chance we get
 	ServiceVirtualWire();
 	ServiceSerial();
+	//ServiceTelnet();
 	ProcessMessages();
 }
 

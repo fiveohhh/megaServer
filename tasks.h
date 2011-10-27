@@ -11,6 +11,7 @@
 #include "WProgram.h" //Include arduino headers
 #include "Time.h"
 #include "MessageProcessing.h"
+#include "Networking.h"
 
 void ToggleLED();
 void Daily();
