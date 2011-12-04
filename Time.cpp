@@ -11,9 +11,11 @@
 
 EthernetUDP Udp;
 
+IPAddress timeServer(192, 43, 244, 18); // time.nist.gov NTP server
+
 void InitializeTime()
 {
-	uint32_t epoch = GetEpoch();
+	uint32_t epoch = 0;//GetEpoch();
 	if (epoch == 0)
 	{
 		Serial.println("Unable to get updated time");
@@ -41,9 +43,9 @@ unsigned long GetEpoch()
 	  sendNTPpacket(timeServer); // send an NTP packet to a time server
 	    // wait to see if a reply is available
 	  delay(1000);
-	  if ( Udp.available() ) {
+	  if ( Udp.parsePacket() ) {
 	    Udp.read(packetBuffer,NTP_PACKET_SIZE);  // read the packet into the buffer
-
+	    Udp.flush();
 	    //the timestamp starts at byte 40 of the received packet and is four bytes,
 	    // or two words, long. First, esxtract the two words:
 
@@ -80,12 +82,13 @@ unsigned long GetEpoch()
 	    return epoch;
 	  }
 #endif
+
 	  return 0;
 }
 
 #ifdef ETHERNET_INSTALLED
 // send an NTP request to the time server at the given address
-unsigned long sendNTPpacket(byte *address)
+unsigned long sendNTPpacket(IPAddress& address)
 {
   Serial.print("Sending Packet\n");
   // set all bytes in the buffer to 0

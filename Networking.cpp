@@ -6,7 +6,8 @@
  */
 
 #include "Networking.h"
-
+#include "Ethernet/Ethernet.h"
+//#include "httpclient/HTTPClient.h"
 
 #define TELNET_PORT 23
 #define textBuffSize 9 //length of longest command string plus two spaces for CR + LF
@@ -33,13 +34,26 @@ int ReadResponse();
 //Server server(TELNET_PORT);
 byte iptarget[] = {10,12,34,135};
 IPAddress ipaddr(10,12,34,135);
-EthernetClient client;
+static EthernetClient client;
 
 void InitializeNetwork()
 {
 	// start ethernet
 		Ethernet.begin(mac,ip, gateway, subnet);
+
+		delay(1000);
+
+		/*
 		//server.begin();
+		Serial.println("trying  coddnnected");
+		if (client.connect(ipaddr, 8080)) {
+		    Serial.println("coddnnected");
+		    // Make a HTTP request:
+		    client.println("GET /restInterface/sensor=11,temp=22,datetime=3333/ HTTP/1.1");
+		    client.println();
+		    client.stop();
+		}
+		*/
 }
 
 void ServiceTelnet()
@@ -107,24 +121,39 @@ void ServiceTelnet()
 	*/
 }
 
-int GET_asClient(byte * serverIP, const char * msg)
+int GET_asClient()
 {
 
 	Serial.println("connecting to server");
-	//Serial.println(serverIP);
-	//Serial.println(msg);
 
+	client.flush();
+
+	if (!client.connected()) {
+	    Serial.println();
+	    Serial.println("disconnecting.");
+	    client.stop();
+
+	  }
 	if (client.connect(ipaddr, 8080))
 	{
 		Serial.println("Connected!");
-		client.flush();
-		client.println("GET /restInterface/sensor=11,temp=22,datetime=3333/ HTTP/1.1");
-		client.println();
-		Serial.print(" - ");
+		char mg[] = "GET /restInterface/sensor=11,temp=22,datetime=3333/ HTTP/1.1";
+		Serial.println(mg);
+		client.println(mg);
+		client.println("");
+
+		Serial.print(" 4pp-pp4 ");
 		//Serial.print(ReadResponse(), DEC);
 		//Serial.println(" bytes received");
-		//client.flush();
+		delay(400);
 		client.stop();
+		if (client.available())
+		{
+			Serial.println("Flushing");
+			client.flush();
+		}
+
+
 
 
 	}
@@ -132,25 +161,9 @@ int GET_asClient(byte * serverIP, const char * msg)
 	{
 		Serial.println("Failed to connect");
 	}
-
+	digitalWrite(10, HIGH);
+	digitalWrite(4, LOW);
 	return 0;
 }
 
-int ReadResponse()
-{
-  int totalBytes=0;
-  unsigned long startTime = millis();
 
-// First wait up to 5 seconds for the server to return some data.
-// If we don't have this initial timeout period we might try to
-// read the data "too quickly" before the server can generate the
-// response to the request
-
-  while ((!client.available()) && ((millis() - startTime ) < 5000));
-
-  while (client.available()) {
-    char c = client.read();
-    totalBytes+=1;
-  }
-  return totalBytes;
-}

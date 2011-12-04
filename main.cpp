@@ -33,6 +33,7 @@
 //The onboard test LED is connected to pin number 13
 const int ledPin = 13;
 const int interval = 1000; //Milliseconds
+const int SPI_SS_PIN = 53;
 
 // Real Time Clock
 RTC_DS1307 RTC;
@@ -53,6 +54,8 @@ int main() {
 	//from working. Calling this functions is a must
 	//for all arduino projects.
 	init();
+
+	pinMode(SPI_SS_PIN, OUTPUT);
 
 	//Initialize the serial port. This will be used
 	//to send diagnostic information in this project.

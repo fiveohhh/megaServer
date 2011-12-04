@@ -40,8 +40,8 @@ void InitializeLogging()
 	  Serial1.println("card initialized.");
 	}
 	*/
+	digitalWrite(10, HIGH);
 
-	pinMode(53, OUTPUT);
 	int initSuccess = 1;
 	// initialize the SD card
 	  if (!card.init(SPI_HALF_SPEED, chipSelect))
@@ -228,7 +228,7 @@ void LogToServer( int sensor, int temp)
 	char buf[255] = "";
 	DateTime now = RTC.now();
 	sprintf(buf,"GET /restInterface/sensor=%d,temp=%d,datetime=%d HTTP/1.1",sensor,temp, now.unixtime());
-	GET_asClient(TEMP_LOG_SERVER_IP, buf);
+	GET_asClient();
 }
 
 
@@ -239,7 +239,7 @@ void LogToSDCard(char * msg)
 	// so you have to close this one before opening another.
 	//File dataFile = SD.open(FILENAME, FILE_WRITE);
 
-	file.open(&root,"datalog.txt",FILE_WRITE);
+	file.open(&root,"tmplog.txt",FILE_WRITE |  O_APPEND);
 
 	// if the file is available, write to it:
 	if (file.isOpen())

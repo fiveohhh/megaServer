@@ -11,7 +11,7 @@
 #include "WProgram.h" //Include arduino headers
 #include "IPAddress.h"
 //#include "SPI/SPI.h"
-#include "Ethernet/Ethernet.h"
+
 #include "globals.h"
 #include "VirtualWire/VirtualWire.h"
 
@@ -24,6 +24,6 @@ extern int msgCount;
 // function prototypes
 void InitializeNetwork();
 void ServiceTelnet();
-int GET_asClient(byte * serverIP, const char * msg);
+int GET_asClient();
 
 #endif /* NETWORKING_H_ */

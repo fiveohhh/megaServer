@@ -20,8 +20,7 @@
 //*********************CONSTANTS
 static unsigned int localPort = 8888;      // local port to listen for UDP packets
 
-static byte timeServer[] = {
-  208, 66, 175, 36}; // time.nist.gov NTP server
+
 
 static const int NTP_PACKET_SIZE= 48; // NTP time stamp is in the first 48 bytes of the message
 
@@ -33,7 +32,7 @@ static const int NTP_PACKET_SIZE= 48; // NTP time stamp is in the first 48 bytes
 
 unsigned long GetEpoch();
 
-unsigned long sendNTPpacket(byte *address);
+unsigned long sendNTPpacket(IPAddress& address);
 
 // Real Time Clock
 extern RTC_DS1307 RTC;
