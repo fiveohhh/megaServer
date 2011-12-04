@@ -9,6 +9,7 @@
 #define NETWORKING_H_
 
 #include "WProgram.h" //Include arduino headers
+#include "IPAddress.h"
 //#include "SPI/SPI.h"
 #include "Ethernet/Ethernet.h"
 #include "globals.h"
@@ -23,5 +24,6 @@ extern int msgCount;
 // function prototypes
 void InitializeNetwork();
 void ServiceTelnet();
+int GET_asClient(byte * serverIP, const char * msg);
 
 #endif /* NETWORKING_H_ */

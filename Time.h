@@ -12,7 +12,7 @@
 #include "RTC1307/RTClib.h"
 
 #ifdef ETHERNET_INSTALLED
-#include "Ethernet/Udp.h"
+#include "Ethernet/EthernetUdp.h"
 #endif
 
 #include "globals.h"

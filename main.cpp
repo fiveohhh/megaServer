@@ -5,7 +5,7 @@
 //#include "EEPROM/EEPROM.h"
 #ifdef ETHERNET_INSTALLED
 #include "Ethernet/Ethernet.h"
-#include "Ethernet/Udp.h"
+#include "Ethernet/EthernetUDP.h"
 #include "Networking.h"
 #endif
 

@@ -13,6 +13,7 @@
 #include "Time.h"
 #include "SD/SD.h"
 #include "SerialLCD.h"
+#include "Networking.h"
 
 void InitializeLogging();
 void WriteStartAddress(uint16_t startingAddress);
@@ -24,9 +25,10 @@ void LogLine(int val);
 void LogLine(char * msg, int len);
 void Log(char * msg, int len);
 
-
 // seconds between temp Logs
 #define TEMP_LOGGING_INTERVAL 300
+
+
 
 static int currentEEAddress;
 

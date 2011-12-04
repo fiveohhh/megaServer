@@ -8,19 +8,29 @@
 // temp is in Kelvin.  normalized to K*100
 #include "Logging.h"
 
-char FILENAME[] = "datalog.txt";
+const char FILENAME[] = "datalog.txt";
+
+byte TEMP_LOG_SERVER_IP[] = { 10, 12, 34, 135 };
 
 const int chipSelect = 53;
 
 static unsigned long SecondsTempsLastLogged[NUMBER_OF_TEMP_SENSORS];
 
+Sd2Card card;
+SdVolume volume;
+SdFile root;
+SdFile file;
+
 void LogToSDCard(char * msg);
 void LogTempToSD(uint8_t sensor, uint16_t kelv);
+void LogToServer( int sensor, int temp);
 
 
 void InitializeLogging()
 {
 	Serial1.println("Initializing SD card...");
+	Serial.println("Initializing SD card...");
+	/*
 	if (!SD.begin(chipSelect))
 	{
 	    Serial1.println("Card failed, or not present");
@@ -29,6 +39,40 @@ void InitializeLogging()
 	{
 	  Serial1.println("card initialized.");
 	}
+	*/
+
+	pinMode(53, OUTPUT);
+	int initSuccess = 1;
+	// initialize the SD card
+	  if (!card.init(SPI_HALF_SPEED, chipSelect))
+	  {
+		  initSuccess = 0;
+		  Serial.println("card.init failed");
+	  }
+
+	  // initialize a FAT volume
+	  if (!volume.init(card))
+	  {
+		  initSuccess = 0;
+		  Serial.println("volume.init failed");
+	  }
+
+	  // open root directory
+	  if (!root.openRoot(&volume))
+	  {
+		  initSuccess = 0;
+		  Serial.println("openRoot failed");
+	  }
+
+	  if (initSuccess == 0)
+	  {
+		  Serial.println("Card init FAILED");
+	  }
+	  else
+	  {
+		  Serial.println("Card init SUCCESS");
+		  LogToSDCard("System Startup");
+	  }
 
 	for (int i = 0; i < NUMBER_OF_TEMP_SENSORS; i++)
 	{
@@ -73,6 +117,8 @@ void LogLine(int val)
 
 void LogTemp(uint8_t sensor, uint16_t kelvInt)
 {
+	Serial.println("Logging To server");
+	LogToServer( (int)sensor, (int)kelvInt);
 
 	if (millis()/1000 - SecondsTempsLastLogged[sensor] > TEMP_LOGGING_INTERVAL)
 	{
@@ -177,20 +223,31 @@ void LogTempToSD(uint8_t sensor, uint16_t kelvInt)
 
 }
 
+void LogToServer( int sensor, int temp)
+{
+	char buf[255] = "";
+	DateTime now = RTC.now();
+	sprintf(buf,"GET /restInterface/sensor=%d,temp=%d,datetime=%d HTTP/1.1",sensor,temp, now.unixtime());
+	GET_asClient(TEMP_LOG_SERVER_IP, buf);
+}
+
+
 void LogToSDCard(char * msg)
 {
 
 	// open the file. note that only one file can be open at a time,
 	// so you have to close this one before opening another.
-	File dataFile = SD.open(FILENAME, FILE_WRITE);
+	//File dataFile = SD.open(FILENAME, FILE_WRITE);
+
+	file.open(&root,"datalog.txt",FILE_WRITE);
 
 	// if the file is available, write to it:
-	if (dataFile)
+	if (file.isOpen())
 	{
 		Serial.print("Logging to SD->");
 		Serial.println(msg);
-		dataFile.println(msg);
-		dataFile.close();
+		file.println(msg);
+		file.close();
 		// print to the serial port too:
 		//Serial.println(dataString);
 	}

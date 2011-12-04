@@ -9,6 +9,8 @@
 
 #include "Time.h"
 
+EthernetUDP Udp;
+
 void InitializeTime()
 {
 	uint32_t epoch = GetEpoch();
@@ -40,7 +42,7 @@ unsigned long GetEpoch()
 	    // wait to see if a reply is available
 	  delay(1000);
 	  if ( Udp.available() ) {
-	    Udp.readPacket(packetBuffer,NTP_PACKET_SIZE);  // read the packet into the buffer
+	    Udp.read(packetBuffer,NTP_PACKET_SIZE);  // read the packet into the buffer
 
 	    //the timestamp starts at byte 40 of the received packet and is four bytes,
 	    // or two words, long. First, esxtract the two words:
@@ -102,7 +104,9 @@ unsigned long sendNTPpacket(byte *address)
 
   // all NTP fields have been given values, now
   // you can send a packet requesting a timestamp:
-  Udp.sendPacket( packetBuffer,NTP_PACKET_SIZE,  address, 123); //NTP requests are to port 123
+  Udp.beginPacket(address, 123);
+  Udp.write( packetBuffer,NTP_PACKET_SIZE  ); //NTP requests are to port 123
+  Udp.endPacket();
   return 0;
 }
 #endif
