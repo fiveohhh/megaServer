@@ -38,6 +38,7 @@ static EthernetClient client;
 
 void InitializeNetwork()
 {
+
 	// start ethernet
 		Ethernet.begin(mac,ip, gateway, subnet);
 
@@ -123,8 +124,9 @@ void ServiceTelnet()
 
 int GET_asClient()
 {
-
+/*
 	Serial.println("connecting to server");
+
 
 	client.flush();
 
@@ -161,9 +163,9 @@ int GET_asClient()
 	{
 		Serial.println("Failed to connect");
 	}
-	digitalWrite(10, HIGH);
-	digitalWrite(4, LOW);
+
 	return 0;
+	*/
 }
 
 

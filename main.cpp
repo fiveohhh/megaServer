@@ -79,14 +79,18 @@ int main() {
 
 
 	RTC.begin();
-#ifdef ETHERNET_INSTALLED
-	InitializeNetwork();
-#endif
+
 	InitializeTime();
 	//Configure ledPin as an output
 	pinMode(ledPin, OUTPUT);
 
+
+
 	InitializeLogging();
+
+#ifdef ETHERNET_INSTALLED
+	//InitializeNetwork();
+#endif
 
 	InitializeTaskRunner();
 

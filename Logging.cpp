@@ -40,7 +40,6 @@ void InitializeLogging()
 	  Serial1.println("card initialized.");
 	}
 	*/
-	digitalWrite(10, HIGH);
 
 	int initSuccess = 1;
 	// initialize the SD card
@@ -57,7 +56,7 @@ void InitializeLogging()
 		  Serial.println("volume.init failed");
 	  }
 
-	  // open root directory
+	 // open root directory
 	  if (!root.openRoot(&volume))
 	  {
 		  initSuccess = 0;
@@ -239,6 +238,7 @@ void LogToSDCard(char * msg)
 	// so you have to close this one before opening another.
 	//File dataFile = SD.open(FILENAME, FILE_WRITE);
 
+
 	file.open(&root,"tmplog.txt",FILE_WRITE |  O_APPEND);
 
 	// if the file is available, write to it:
@@ -248,6 +248,7 @@ void LogToSDCard(char * msg)
 		Serial.println(msg);
 		file.println(msg);
 		file.close();
+
 		// print to the serial port too:
 		//Serial.println(dataString);
 	}
@@ -259,4 +260,5 @@ void LogToSDCard(char * msg)
 		SetMessage("SD ERROR", strlen("SD ERROR"));
 
 	}
+
 }
