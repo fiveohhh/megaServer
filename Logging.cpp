@@ -10,9 +10,9 @@
 
 const char FILENAME[] = "datalog.txt";
 
-byte TEMP_LOG_SERVER_IP[] = { 10, 12, 34, 135 };
+IPAddress TEMP_LOG_SERVER_IP( 10, 12, 34, 135 );
 
-const int chipSelect = 53;
+const int chipSelect = 4;
 
 static unsigned long SecondsTempsLastLogged[NUMBER_OF_TEMP_SENSORS];
 
@@ -116,13 +116,12 @@ void LogLine(int val)
 
 void LogTemp(uint8_t sensor, uint16_t kelvInt)
 {
-	Serial.println("Logging To server");
-	LogToServer( (int)sensor, (int)kelvInt);
 
 	if (millis()/1000 - SecondsTempsLastLogged[sensor] > TEMP_LOGGING_INTERVAL)
 	{
 
 		LogTempToSD(sensor,kelvInt);
+		LogToServer( (int)sensor, (int)kelvInt);
 		PrintTime();
 		SecondsTempsLastLogged[sensor] = millis()/1000;
 		static int writes = 0;
@@ -226,8 +225,10 @@ void LogToServer( int sensor, int temp)
 {
 	char buf[255] = "";
 	DateTime now = RTC.now();
-	sprintf(buf,"GET /restInterface/sensor=%d,temp=%d,datetime=%d HTTP/1.1",sensor,temp, now.unixtime());
-	GET_asClient();
+	long epochSeconds = now.unixtime();
+	Serial.println(epochSeconds);
+	sprintf(buf,"GET /restInterface/sensor=%d,temp=%d,datetime=%lu HTTP/1.1",sensor,temp, epochSeconds);
+	GET_asClient(buf, TEMP_LOG_SERVER_IP);
 }
 
 
@@ -238,7 +239,8 @@ void LogToSDCard(char * msg)
 	// so you have to close this one before opening another.
 	//File dataFile = SD.open(FILENAME, FILE_WRITE);
 
-
+	digitalWrite(4,LOW);
+	delay(100);
 	file.open(&root,"tmplog.txt",FILE_WRITE |  O_APPEND);
 
 	// if the file is available, write to it:
@@ -260,5 +262,7 @@ void LogToSDCard(char * msg)
 		SetMessage("SD ERROR", strlen("SD ERROR"));
 
 	}
+	delay(100);
+	digitalWrite(4,HIGH);
 
 }

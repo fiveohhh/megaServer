@@ -20,10 +20,9 @@ extern int msgCount;
 
 
 
-
 // function prototypes
 void InitializeNetwork();
 void ServiceTelnet();
-int GET_asClient();
+int GET_asClient(char * msg, IPAddress ipaddr);
 
 #endif /* NETWORKING_H_ */

@@ -122,31 +122,17 @@ void ServiceTelnet()
 	*/
 }
 
-int GET_asClient()
+int GET_asClient(char * msg, IPAddress serverAddr)
 {
-/*
+
 	Serial.println("connecting to server");
 
-
-	client.flush();
-
-	if (!client.connected()) {
-	    Serial.println();
-	    Serial.println("disconnecting.");
-	    client.stop();
-
-	  }
-	if (client.connect(ipaddr, 8080))
+	if (client.connect(serverAddr, 80))
 	{
-		Serial.println("Connected!");
-		char mg[] = "GET /restInterface/sensor=11,temp=22,datetime=3333/ HTTP/1.1";
-		Serial.println(mg);
-		client.println(mg);
+		Serial.println("Connected to server!");
+		client.println(msg);
 		client.println("");
 
-		Serial.print(" 4pp-pp4 ");
-		//Serial.print(ReadResponse(), DEC);
-		//Serial.println(" bytes received");
 		delay(400);
 		client.stop();
 		if (client.available())
@@ -154,10 +140,6 @@ int GET_asClient()
 			Serial.println("Flushing");
 			client.flush();
 		}
-
-
-
-
 	}
 	else
 	{
@@ -165,7 +147,7 @@ int GET_asClient()
 	}
 
 	return 0;
-	*/
+
 }
 
 

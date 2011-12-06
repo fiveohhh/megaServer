@@ -3,6 +3,7 @@
 	<name>megaServer</name>
 	<comment></comment>
 	<projects>
+		<project>Arduino</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

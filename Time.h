@@ -18,13 +18,7 @@
 #include "globals.h"
 
 //*********************CONSTANTS
-static unsigned int localPort = 8888;      // local port to listen for UDP packets
 
-
-
-static const int NTP_PACKET_SIZE= 48; // NTP time stamp is in the first 48 bytes of the message
-
- static byte packetBuffer[ NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
 
 
 //*********************FUNCTIONS
