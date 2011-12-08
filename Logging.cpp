@@ -120,8 +120,9 @@ void LogTemp(uint8_t sensor, uint16_t kelvInt)
 	if (millis()/1000 - SecondsTempsLastLogged[sensor] > TEMP_LOGGING_INTERVAL)
 	{
 
-		LogTempToSD(sensor,kelvInt);
 		LogToServer( (int)sensor, (int)kelvInt);
+		LogTempToSD(sensor,kelvInt);
+
 		PrintTime();
 		SecondsTempsLastLogged[sensor] = millis()/1000;
 		static int writes = 0;
@@ -227,7 +228,7 @@ void LogToServer( int sensor, int temp)
 	DateTime now = RTC.now();
 	long epochSeconds = now.unixtime();
 	Serial.println(epochSeconds);
-	sprintf(buf,"GET /restInterface/sensor=%d,temp=%d,datetime=%lu HTTP/1.1",sensor,temp, epochSeconds);
+	sprintf(buf,"GET /restInterface/sensor_%d-temp_%d-datetime_%lu/ HTTP/1.1",sensor,temp, epochSeconds);
 	GET_asClient(buf, TEMP_LOG_SERVER_IP);
 }
 

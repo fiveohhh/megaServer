@@ -130,16 +130,24 @@ int GET_asClient(char * msg, IPAddress serverAddr)
 	if (client.connect(serverAddr, 80))
 	{
 		Serial.println("Connected to server!");
-		client.println(msg);
+		Serial.println(msg);
+		client.print(msg);
+		client.print(0x0d);
+		client.print(0x0a);
+		client.println("Host: 10.12.34.99");
 		client.println("");
 
-		delay(400);
-		client.stop();
-		if (client.available())
+		delay(1000);
+		while (client.available())
 		{
-			Serial.println("Flushing");
-			client.flush();
+			Serial.print( (char)client.read());
+
+
 		}
+		client.flush();
+		Serial.println("Flushing");
+
+		client.stop();
 	}
 	else
 	{

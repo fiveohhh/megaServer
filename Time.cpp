@@ -24,7 +24,7 @@ static const int NTP_PACKET_SIZE= 48; // NTP time stamp is in the first 48 bytes
 void InitializeTime()
 {
 	Udp.begin(localPort);
-	uint32_t epoch = GetEpoch();
+	uint32_t epoch = 0; //GetEpoch();
 	if (epoch == 0)
 	{
 		Serial.println("Unable to get updated time");
