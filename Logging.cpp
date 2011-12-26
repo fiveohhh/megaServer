@@ -232,6 +232,13 @@ void LogToServer( int sensor, int temp)
 	GET_asClient(buf, TEMP_LOG_SERVER_IP);
 }
 
+void SendMsgToServer (char * msg)
+{
+	char buf[255] = "";
+	sprintf(buf,"GET /restInterface/msg/%s/ HTTP/1.1",msg);
+	GET_asClient(buf, TEMP_LOG_SERVER_IP);
+}
+
 
 void LogToSDCard(char * msg)
 {

@@ -24,6 +24,7 @@ void PrintTime();
 void LogLine(int val);
 void LogLine(char * msg, int len);
 void Log(char * msg, int len);
+void SendMsgToServer (char * msg);
 
 // seconds between temp Logs
 #define TEMP_LOGGING_INTERVAL 300

@@ -9,6 +9,7 @@
 // Local function prototypes
 void ProcessERSMsg(char* msg);
 void ProcessEGTMsg(char* msg);
+void ProcessUNKNOWNMsg(char* msg);
 
 
 
@@ -42,6 +43,7 @@ void ProcessMessages()
 		case e_UNKNOWN:
 			LogLine("UNKNOWN message received: ", strlen("UNKNOWN message received: "));
 			LogLine(messages[i], VW_MAX_MESSAGE_LEN);
+			ProcessUNKNOWNMsg(messages[i]);
 			break;
 		}
 		msgCount--;
@@ -83,6 +85,14 @@ msgTypes_E GetMsgType(char *p)
 	}
 
 	return e_UNKNOWN;
+}
+
+// As of Dec 25-2011, all future messages will be passed through to the PC server without any processing.
+// this will eliminate the need to crack this code open when new messages are added
+// going to do the time stamp on the PC too so I don't need to worry about this falling out of sync.
+void ProcessUNKNOWNMsg(char* msg)
+{
+	SendMsgToServer (msg);
 }
 
 void ProcessTMPMsg(char* msg)
